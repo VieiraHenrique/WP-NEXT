@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { client } from "../lib/apollo";
-import { getPage } from "../lib/queries";
+import { getPage, getPages } from "../lib/queries";
 
 export default function HomePage({ page }) {
     console.log(page);
@@ -17,16 +17,33 @@ export default function HomePage({ page }) {
     );
 }
 
-export async function getStaticProps(context) {
+export async function getStaticProps({ params }) {
+    console.log(params.slug);
     const props = {};
 
     const { data } = await client.query({
-        query: getPage("welcome"),
+        query: getPage(params.slug),
     });
 
+    console.log(data);
     props["page"] = data.page;
 
     return {
         props,
+    };
+}
+
+export async function getStaticPaths() {
+    const { data } = await client.query({
+        query: getPages,
+    });
+
+    const paths = data.pages.edges.map((page) => {
+        return { params: { slug: page.node.slug } };
+    });
+
+    return {
+        paths: paths,
+        fallback: false, // goes to 404 if not valid
     };
 }
