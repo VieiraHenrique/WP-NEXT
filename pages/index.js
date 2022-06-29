@@ -4,7 +4,6 @@ import { client } from "../lib/apollo";
 import { getPage, getProducts } from "../lib/queries";
 
 export default function HomePage({ page, products }) {
-
     return (
         <>
             <Head>
@@ -15,9 +14,10 @@ export default function HomePage({ page, products }) {
                 <h1>{page.title}</h1>
             </div>
             <div className="products-grid">
-              {products && products.map((product)=>{
-                return <Card key={product.node.id} product={product.node}/>
-              })}
+                {products &&
+                    products.map((product) => {
+                        return <Card key={product.node.id} product={product.node} />;
+                    })}
             </div>
         </>
     );
@@ -25,6 +25,7 @@ export default function HomePage({ page, products }) {
 
 export async function getStaticProps(context) {
     const props = {};
+    await client.resetStore();
 
     const { data: pageData } = await client.query({
         query: getPage("welcome"),

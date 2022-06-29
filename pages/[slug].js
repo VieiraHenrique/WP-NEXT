@@ -19,6 +19,7 @@ export default function HomePage({ page }) {
 export async function getStaticProps({ params }) {
     const props = {};
 
+    await client.resetStore();
     const { data } = await client.query({
         query: getPage(params.slug),
     });
