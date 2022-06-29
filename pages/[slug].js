@@ -3,7 +3,6 @@ import { client } from "../lib/apollo";
 import { getPage, getPages } from "../lib/queries";
 
 export default function HomePage({ page }) {
-    console.log(page);
     return (
         <>
             <Head>
@@ -18,14 +17,12 @@ export default function HomePage({ page }) {
 }
 
 export async function getStaticProps({ params }) {
-    console.log(params.slug);
     const props = {};
 
     const { data } = await client.query({
         query: getPage(params.slug),
     });
 
-    console.log(data);
     props["page"] = data.page;
 
     return {
